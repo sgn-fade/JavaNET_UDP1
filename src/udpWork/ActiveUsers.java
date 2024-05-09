@@ -40,5 +40,5 @@ public class ActiveUsers implements Serializable {
     public void clear(){
         users.clear();
     }
-    
+
 }
