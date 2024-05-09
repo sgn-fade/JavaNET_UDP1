@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class UDPClient {
     private ActiveUsers userList = null;
@@ -26,11 +27,18 @@ public class UDPClient {
     }
     public void work(int bufferSize) throws ClassNotFoundException {
         byte[] buffer = new byte[bufferSize];
-        try {
+        try (Scanner scanner = new Scanner(System.in)){
             packet = new DatagramPacket(buffer, buffer.length,
                     serverAddress, serverPort);
-            socket.send(packet);
             System.out.println("Sending request");
+            System.out.println("type 1 to end server work");
+            if(scanner.nextInt() == 1){
+                packet = new DatagramPacket(buffer, 0, serverAddress, serverPort);
+                socket.send(packet);
+                return;
+            }
+            socket.send(packet);
+
             while (true) {
                 packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
@@ -59,5 +67,7 @@ public class UDPClient {
     public static void main(String[] args) throws ClassNotFoundException {
         (new UDPClient("127.0.0.1", 1501)).work(256);
     }
+    private void option(){
 
+    }
 }

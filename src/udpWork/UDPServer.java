@@ -29,7 +29,7 @@ public class UDPServer {
         try {
             System.out.println("Server start...");
             while (true) { // безкінечний цикл роботи з клієнтами
-                getUserData(bufferSize); // отримання запиту клієнта
+                if(!getUserData(bufferSize)) return; // отримання запиту клієнта
                 log(address, port); // вивід інформації про клієнта на екран
                 sendUserData(); // формування та відправка відповіді
                 // клієнту
@@ -45,10 +45,13 @@ public class UDPServer {
         System.out.println("Request from: " + address.getHostAddress() +
                 " port: " + port);
     }
-    private void getUserData(int bufferSize) throws IOException {
+    private boolean getUserData(int bufferSize) throws IOException {
         byte[] buffer = new byte[bufferSize];
         packet = new DatagramPacket(buffer, buffer.length);
+        System.out.println(packet.getLength());
         socket.receive(packet);
+        if (packet.getLength()==0) return false;
+
         address = packet.getAddress();
         port = packet.getPort();
         User usr = new User(port, address);
@@ -58,6 +61,7 @@ public class UDPServer {
             userList.add(usr);
         }
         clear(buffer);
+        return true;
     }
     private void clear(byte[] buffer){
         Arrays.fill(buffer, (byte) 0);
