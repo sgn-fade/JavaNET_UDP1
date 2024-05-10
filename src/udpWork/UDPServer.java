@@ -48,7 +48,6 @@ public class UDPServer {
     private boolean getUserData(int bufferSize) throws IOException {
         byte[] buffer = new byte[bufferSize];
         packet = new DatagramPacket(buffer, buffer.length);
-        System.out.println(packet.getLength());
         socket.receive(packet);
         if (packet.getLength()==0) return false;
 
